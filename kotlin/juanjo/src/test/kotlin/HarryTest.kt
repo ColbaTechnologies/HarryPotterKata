@@ -2,103 +2,87 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class HarryTest {
-
     @Test
-    fun priceWithOneBook() {
-        // GIVEN
-        val expectedPrice = 8.0
-
-        // WHEN
-        val priceWithOneBook = totalMoney(listOf(Books.BOOK_1))
-
-        // THEN
-        assertEquals(expectedPrice, priceWithOneBook)
+    fun testBasics() {
+        assertEquals(0.0, totalMoney(emptyList()))
+        assertEquals(8.0, totalMoney(listOf(Books.BOOK_1)))
+        assertEquals(8.0, totalMoney(listOf(Books.BOOK_2)))
+        assertEquals(8.0, totalMoney(listOf(Books.BOOK_3)))
+        assertEquals(8.0, totalMoney(listOf(Books.BOOK_4)))
+        assertEquals(8.0 * 3, totalMoney(listOf(Books.BOOK_1, Books.BOOK_1, Books.BOOK_1)))
     }
 
     @Test
-    fun priceWithTwoBook() {
-        // GIVEN
-        val expectedPrice = 15.2
-
-        // WHEN
-        val priceWithTwoBook = totalMoney(listOf(Books.BOOK_1, Books.BOOK_2))
-
-        // THEN
-        assertEquals(expectedPrice, priceWithTwoBook)
+    fun testSimpleDiscounts() {
+        assertEquals(8 * 2 * 0.95, totalMoney(listOf(Books.BOOK_1, Books.BOOK_2)))
+        assertEquals(8 * 3 * 0.9, totalMoney(listOf(Books.BOOK_1, Books.BOOK_3, Books.BOOK_5)))
+        assertEquals(8 * 4 * 0.8, totalMoney(listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_3, Books.BOOK_4)))
+        assertEquals(
+            8 * 5 * 0.75,
+            totalMoney(listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_3, Books.BOOK_4, Books.BOOK_5))
+        )
     }
 
     @Test
-    fun priceWithTwoBookSimilar() {
-        // GIVEN
-        val expectedPrice = 16.0
-
-        // WHEN
-        val priceWithTwoBook = totalMoney(listOf(Books.BOOK_1, Books.BOOK_1))
-
-        // THEN
-        assertEquals(expectedPrice, priceWithTwoBook)
+    fun testSeveralDiscounts() {
+        assertEquals(8 + (8 * 2 * 0.95), totalMoney(listOf(Books.BOOK_1, Books.BOOK_1, Books.BOOK_2)))
+        assertEquals(2 * (8 * 2 * 0.95), totalMoney(listOf(Books.BOOK_1, Books.BOOK_1, Books.BOOK_2, Books.BOOK_2)))
+        assertEquals(
+            (8 * 4 * 0.8) + (8 * 2 * 0.95),
+            totalMoney(listOf(Books.BOOK_1, Books.BOOK_1, Books.BOOK_2, Books.BOOK_3, Books.BOOK_3, Books.BOOK_4))
+        )
+        assertEquals(
+            8 + (8 * 5 * 0.75),
+            totalMoney(listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_2, Books.BOOK_3, Books.BOOK_4, Books.BOOK_5))
+        )
     }
 
     @Test
-    fun priceWithThreeBook() {
-        // GIVEN
-        val expectedPrice = 21.6
-
-        // WHEN
-        val priceWithTwoBook = totalMoney(listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_3))
-
-        // THEN
-        assertEquals(expectedPrice, priceWithTwoBook)
-    }
-
-    @Test
-    fun priceWithThreeBookSimilar() {
-        // GIVEN
-        val expectedPrice = 24.0
-
-        // WHEN
-        val priceWithTwoBook = totalMoney(listOf(Books.BOOK_1, Books.BOOK_1, Books.BOOK_1))
-
-        // THEN
-        assertEquals(expectedPrice, priceWithTwoBook)
-    }
-
-    @Test
-    fun priceWithTwoDifferent() {
-        // GIVEN
-        val expectedPrice = 23.2
-
-        // WHEN
-        val priceWithTwoBook = totalMoney(listOf(Books.BOOK_1, Books.BOOK_1, Books.BOOK_2))
-        val priceWithOtherTwoBook = totalMoney(listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_2))
-        val priceMiddleDifferent = totalMoney(listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_1))
-
-        // THEN
-        assertEquals(expectedPrice, priceWithTwoBook)
-        assertEquals(expectedPrice, priceWithOtherTwoBook)
-        assertEquals(expectedPrice, priceMiddleDifferent)
-    }
-
-    @Test
-    fun checkDifferentListItems(){
-        // GIVEN
-        val total = 3
-        // WHEN
-        val list = listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_3)
-        // THEN
-        assertEquals(total, howManyDistinctItems(list).size)
-    }
-
-    @Test
-    fun simpleDiscount(){
-        val total = 8 * 2 * 0.95
-        val list = listOf(Books.BOOK_1, Books.BOOK_2)
-        assertEquals(total, totalMoney(list))
-
-        //assertEquals(8 * 2 * 0.9, listOf(Books.BOOK_1, Books.BOOK_3, Books.BOOK_5))
-
-
-//        assert_equal(8 * 4 * 0.8, price([0, 1, 2, 4]))
-//        assert_equal(8 * 5 * 0.75, price([0, 1, 2, 3, 4]))
+    fun testEdgeCases() {
+        assertEquals(
+            2 * (8 * 4 * 0.8),
+            totalMoney(
+                listOf(
+                    Books.BOOK_1,
+                    Books.BOOK_1,
+                    Books.BOOK_2,
+                    Books.BOOK_2,
+                    Books.BOOK_3,
+                    Books.BOOK_3,
+                    Books.BOOK_4,
+                    Books.BOOK_5
+                )
+            )
+        )
+        assertEquals(
+            3 * (8 * 5 * 0.75) + 2 * (8 * 4 * 0.8),
+            totalMoney(
+                listOf(
+                    Books.BOOK_1,
+                    Books.BOOK_1,
+                    Books.BOOK_1,
+                    Books.BOOK_1,
+                    Books.BOOK_1,
+                    Books.BOOK_2,
+                    Books.BOOK_2,
+                    Books.BOOK_2,
+                    Books.BOOK_2,
+                    Books.BOOK_2,
+                    Books.BOOK_3,
+                    Books.BOOK_3,
+                    Books.BOOK_3,
+                    Books.BOOK_3,
+                    Books.BOOK_4,
+                    Books.BOOK_4,
+                    Books.BOOK_4,
+                    Books.BOOK_4,
+                    Books.BOOK_4,
+                    Books.BOOK_5,
+                    Books.BOOK_5,
+                    Books.BOOK_5,
+                    Books.BOOK_5
+                )
+            )
+        )
     }
 }

@@ -5,48 +5,51 @@ fun main(args: Array<String>) {
 
 private const val FIXED_PRICE = 8.0
 
-fun totalMoney(booksList: List<Books>): Double? {
+fun totalMoney(booksList: List<Books>): Double {
 
-    when (booksList.size) {
-        1 -> return FIXED_PRICE
-        2 -> {
-            if (booksList[0] == booksList[1]) {
-                return FIXED_PRICE * booksList.size
+    val shoppingCart: MutableList<MutableList<Books>> = mutableListOf()
+
+    booksList.forEach { bookItem ->
+        if (shoppingCart.isEmpty()) {
+            shoppingCart.add(mutableListOf(bookItem))
+        } else {
+            val all = shoppingCart.all { group -> group.contains(bookItem) }
+            if (all) {
+                shoppingCart.add(mutableListOf(bookItem))
             } else {
-                val price = FIXED_PRICE * 2 * 5
-                val totalPrice: Double = price / 100
-                return 16 - totalPrice
-            }
-        }
-
-        3 -> {
-            when (howManyDistinctItems(booksList).size) {
-                3 -> {
-                    val price = FIXED_PRICE * 3 * 10
-                    val totalPrice: Double = price / 100
-                    return 24 - totalPrice
-                }
-
-                2 -> {
-                    val price = FIXED_PRICE * 2 * 5
-                    val totalPrice: Double = price / 100
-                    return (16 - totalPrice) + FIXED_PRICE
-                }
-
-                1 -> {
-                    return 24.0
-                }
+                shoppingCart.find { !it.contains(bookItem) }?.add(bookItem)
             }
         }
     }
 
-    return null
-}
+    var totalPrice = 0.0
 
-fun howManyDistinctItems(booksList: List<Books>): List<Books> {
-    return booksList.distinct()
-}
+    shoppingCart.forEach() {
+        when (it.size) {
+            1 -> {
+                totalPrice += FIXED_PRICE
+            }
 
+            2 -> {
+                totalPrice += 8 * 2 * 0.95
+            }
+
+            3 -> {
+                totalPrice += 8 * 3 * 0.9
+            }
+
+            4 -> {
+                totalPrice += 8 * 4 * 0.8
+            }
+
+            5 -> {
+                totalPrice += 8 * 5 * 0.75
+            }
+        }
+    }
+
+    return totalPrice
+}
 
 enum class Books {
     BOOK_1,
