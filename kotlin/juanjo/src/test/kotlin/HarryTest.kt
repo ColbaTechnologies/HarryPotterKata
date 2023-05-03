@@ -86,6 +86,19 @@ class HarryTest {
         // WHEN
         val list = listOf(Books.BOOK_1, Books.BOOK_2, Books.BOOK_3)
         // THEN
-        assertEquals(total, howManuDistinctItems(list).size)
+        assertEquals(total, howManyDistinctItems(list).size)
+    }
+
+    @Test
+    fun simpleDiscount(){
+        val total = 8 * 2 * 0.95
+        val list = listOf(Books.BOOK_1, Books.BOOK_2)
+        assertEquals(total, totalMoney(list))
+
+        //assertEquals(8 * 2 * 0.9, listOf(Books.BOOK_1, Books.BOOK_3, Books.BOOK_5))
+
+
+//        assert_equal(8 * 4 * 0.8, price([0, 1, 2, 4]))
+//        assert_equal(8 * 5 * 0.75, price([0, 1, 2, 3, 4]))
     }
 }
