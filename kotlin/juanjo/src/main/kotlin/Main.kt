@@ -3,63 +3,53 @@ fun main(args: Array<String>) {
     println("Total to pay: $result")
 }
 
-fun totalMoney(booksList: List<Books>): Double? {
-    if (booksList.size == 1) {
-        return 8.0
-    }
-    if (booksList.size == 2) {
-        if (booksList[0] == booksList[1]) {
-            return 16.0
+private const val FIXED_PRICE = 8.0
+
+fun totalMoney(booksList: List<Books>): Double {
+
+    val shoppingCart: MutableList<MutableList<Books>> = mutableListOf()
+
+    booksList.forEach { bookItem ->
+        if (shoppingCart.isEmpty()) {
+            shoppingCart.add(mutableListOf(bookItem))
         } else {
-            val price = 8 * 2 * 5
-            val totalPrice: Double = price.toDouble() / 100
-            return 16 - totalPrice
+            val all = shoppingCart.all { group -> group.contains(bookItem) }
+            if (all) {
+                shoppingCart.add(mutableListOf(bookItem))
+            } else {
+                shoppingCart.find { !it.contains(bookItem) }?.add(bookItem)
+            }
         }
     }
-    if (booksList.size == 3) {
-        when(howManuDistinctItems(booksList).size) {
-            3 -> {
-                val price = 8 * 3 * 10
-                val totalPrice: Double = price.toDouble() / 100
-                return 24 - totalPrice
+
+    var totalPrice = 0.0
+
+    shoppingCart.forEach() {
+        when (it.size) {
+            1 -> {
+                totalPrice += FIXED_PRICE
             }
+
             2 -> {
-                val price = 8 * 2 * 5
-                val totalPrice: Double = price.toDouble() / 100
-                return (16 - totalPrice) + 8
+                totalPrice += 8 * 2 * 0.95
             }
-            1-> {
-                return 24.0
+
+            3 -> {
+                totalPrice += 8 * 3 * 0.9
+            }
+
+            4 -> {
+                totalPrice += 8 * 4 * 0.8
+            }
+
+            5 -> {
+                totalPrice += 8 * 5 * 0.75
             }
         }
-/*        if (booksList[0] !== booksList[1] && booksList[0] !== booksList[2] && booksList[1] !== booksList[2]) {
-            val price = 8 * 3 * 10
-            val totalPrice: Double = price.toDouble() / 100
-            return 24 - totalPrice
-        } else if (booksList[0] == booksList[1] && booksList[0] !== booksList[2]) {
-            val price = 8 * 2 * 5
-            val totalPrice: Double = price.toDouble() / 100
-            return (16 - totalPrice) + 8
-        } else if (booksList[0] != booksList[1] && booksList[0] == booksList[2]) {
-            val price = 8 * 2 * 5
-            val totalPrice: Double = price.toDouble() / 100
-            return (16 - totalPrice) + 8
-        } else if (booksList[0] != booksList[1] && booksList[1] == booksList[2]) {
-            val price = 8 * 2 * 5
-            val totalPrice: Double = price.toDouble() / 100
-            return (16 - totalPrice) + 8
-        } else {
-            return 24.0
-        }*/
-
     }
-    return null
-}
 
-fun howManuDistinctItems(booksList: List<Books>): List<Books> {
-    return booksList.distinct()
+    return totalPrice
 }
-
 
 enum class Books {
     BOOK_1,
