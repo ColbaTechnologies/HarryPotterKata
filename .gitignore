@@ -1,1 +1,5 @@
 .idea
+csharp/Jose/HPKata/HPKata/bin
+csharp/Jose/HPKata/HPKata/obj
+csharp/Jose/HPKata/HPKata.Tests/obj
+csharp/Jose/HPKata/HPKata.Tests/bin
